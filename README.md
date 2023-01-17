@@ -218,3 +218,51 @@ npx cypress run --spec cypress/e2e/gui/login.cy.js
     ✔  All specs passed!                        00:02        1        1        -        -        -
 
 ```
+
+# Testando a funcionalidade de logout
+
+Crie um teste automatizado que exercita a funcionalidade de logout via interface gráfica de usuário.
+
+1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `logout.cy.js` com os seguintes dados:
+
+```bash
+describe('Logout', () => {
+  beforeEach(() => {
+    cy.login()
+    cy.visit('/')
+  })
+
+  it('successfully', () => {
+    cy.logout()
+
+    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/users/sign_in`)
+  })
+})
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo `gui_commands.js` com o commando logout, conforme abaixo:
+
+```bash
+Cypress.Commands.add('logout', () => {
+    cy.get('.qa-user-avatar').click()
+    cy.contains('Sign out').click()
+})
+```
+
+3. Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando para executar o novo teste em modo headless.
+
+```bash
+npx cypress run --spec cypress/e2e/gui/logout.cy.js
+```
+
+```
+(Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  logout.cy.js                             00:03        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:03        1        1        -        -        -
+
+```
