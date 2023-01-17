@@ -74,7 +74,8 @@ Depois de alguns minutos, acesse a URL <a href="http://localhost" target="blank"
 
 Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>, deverá aparece ma página assim, no qual deve ser traocado a senha do usuário `root`
 
-![please-create-a-password-for-your-new-account.png](..%2F..%2F..%2F..%2F..%2F..%2FPictures%2Fplease-create-a-password-for-your-new-account.png)
+<img width="1134" alt="please-create-a-password-for-your-new-account" src="https://user-images.githubusercontent.com/68359459/213010797-da839415-d576-4c6e-9f84-b289b737d957.png">
+
 
 ## Criando um Access Token
 
