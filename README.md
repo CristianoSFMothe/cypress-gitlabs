@@ -1,2 +1,123 @@
-# cypress-gitlabs
- 
+# Cypress Gitlabs
+
+> Curso intermediario da <a href="https://github.com/wlsf82" targe="blank">Escola Talking Abount Testing</a> de Cypress
+
+
+# Conteúdo
+
+---
+Durante o curso de testes automatizados com o Cypress foi aprendido
+ * Como configurar o ambiente local de desenvolvimento
+ * Como instalar e configurar o Cypress
+ * Como criar testes automatizados de interface gráfica de usuário
+ * Como criar testes automatizados de API (com feedback visual no navegador)
+ * Como testar APIs que necessitam um token de acesso
+ * Como criar testes otimizados e direto-ao-ponto
+ * Como salvar a sessão do usuário no navegador para posterior restauração
+ * Como validar se a sessão do usuário ainda é válida e como lidar com isso quando a mesma é invalidada
+ * Como fazer a limpeza e criação da massa de dados antes do teste começar
+ * Como proteger dados sensíveis, tais como senhas e tokens de acesso
+ * Como organizar os testes e comandos customizados em diferentes "camadas" (API, CLI, GUI)
+ * Como estruturar os testes pensando em pré-condições, ações e resultados esperados
+ * Como gerar dados aleatórios para uso nos testes automatizados
+ * Como habilitar funcionalidades experimentais do Cypress
+ * Como executar comandos à nível de sistema operacional
+ * E como testar a leitura de arquivos
+
+## Pré-requisitos
+
+Antes de começar, garanta que os seguintes requisitos sejam atendidos:
+
+* Computador com no mínimo 2 cores
+* e no mínimo 8 GB de memória RAM
+
+Além disso, garanta que os seguintes sistemas estejam instalados no seu computador:
+
+* <a href="https://www.docker.com/" target="blank">Docker</a> (estou usando a versão 20.10.22)
+* <a href="https://git-scm.com/" target="blank">git</a> (estou usando a versão 2.39.0)
+* <a href="https://nodejs.org/en/" target="blank">Node.js</a> (estou usando a versão v16.18.0)
+* <a href="https://www.npmjs.com/" target="blank">npm</a> (estou usando a versão 9.3.0)
+* <a href="https://code.visualstudio.com/" target="blank">Visual Studio Code</a> (versão 1.74.3) ou alguma outra IDE de sua preferência
+* <a href="https://www.jetbrains.com/webstorm/promo/?source=google&medium=cpc&campaign=9641686251&term=webstorm&content=523833970787" target="blank">WebStorm</a> (versão 17.0.5) No meu caso estou usando essa IDE
+
+> Para verificar as versões do Docker, git, Node.js e npm como o seguinte comando `docker --version && git --version && node --version && npm --version`
+
+
+# Funcionalidades da aplicação de testes
+
+O GitLab possui diversas funcionalidades, porém, duruante o curso fui tratado as seguintes:
+
+* Login
+* Logout
+* Criação de projeto
+* Criação de issue
+* Adição de uma etiqueta (label) à uma issue
+* Adição de um marco (milestone) a uma issue
+* Git clone
+
+# Setup do ambiente local com Docker
+
+Com o docker rodando no seu computador, execute o comando 
+
+```bash
+docker run --publish 80:80 --publish 22:22 --hostname localhost wlsf82/gitlab-ce
+```
+e aguarde até o ambiente inicializar.
+
+> 🕐 Isso por levar alguns minutos.
+>
+> ☕ Portanto, recomendo pegar um café (ou um chá) enquanto aguarda.
+
+Depois de alguns minutos, acesse a URL <a href="http://localhost" target="blank">http://localhost</a> para definir a senha do usuário `root`.
+
+## Definindo a senha do usuário root
+
+Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>, deverá aparece ma página assim, no qual deve ser traocado a senha do usuário `root`
+
+![please-create-a-password-for-your-new-account.png](..%2F..%2F..%2F..%2F..%2F..%2FPictures%2Fplease-create-a-password-for-your-new-account.png)
+
+## Criando um Access Token
+
+1. Faça login com o usuário `root` com a senha definida na seção anterior
+2. Clique no avatar do usuário no canto superior direito da tela; clique no link _Settings_, e então; clique na opção _Access Tokens_ (no menu lateral esquerdo)
+3. No campo nome, digite o valor `cypress-intermediario-v2`; na seção _Scopes_ marque a opção **api**; e então, clique no botão _Create personal access token_.
+
+> Uma mensagem de que o _token_ foi criado com sucesso deve ser exibida, além do _token_ propriamente dito. **Copie o _token_**.
+
+# Setup do projeto de testes com Cypress
+
+## Clonando o projeto
+
+----
+
+1. Acesse a URL <a href="https://github.com/wlsf82/cypress-intermediario-v2" target="blank">https://github.com/wlsf82/cypress-intermediario-v2</a>
+2. Clique no botão Clone
+3. Escolha uma das opções (Clone with SSH ou Clone with HTTPS) e então clique no botão Copy URL ao lado do campo da opção escolhida
+
+## Instalando o Cypress e outras libs
+
+----
+No terminal de linha de comando, na raiz do projeto, execute o comando (este comando irá instalar o Cypress e outras libs como dependências de desenvolvimento, além de criar o arquivo` package-lock.json` e o diretório `node_modules/`, para onde é feito o download de todas as dependências).
+
+```bash
+npm i @faker-js/faker@7.6.0 cypress@12.0.2 cypress-plugin-api@2.6.1 -D
+```
+
+## Inicializando o Cypress
+
+----
+
+No terminal de linha de comando, na raiz do projeto, execute o comando (este comando irá abrir a Cypress App, a qual vai guiar na criação do projeto de testes end-to-end (E2E).
+
+```bash
+npx cypress open
+```
+
+1. Clique no botão para a criação de um projeto de testes end-to-end (E2E Testing);
+2. Aceite os arquivos de configuração clicando no botão Continue;
+3. Selecione o navegador `Electron` e clique no botão `Start E2E Testing in Electron`;
+4. Crie um primeiro arquivo de teste clicando na opção `Create new emtpy spec`;
+5. Nomeie o arquivo como `login.cy.js`; 
+6. clique no botão Create spec;
+7. e então, confirme clicando no botão `Ok`, `run the spec`;
+8. Após a execução do arquivo recém-criado, feche o navegador Electron.
