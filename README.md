@@ -100,8 +100,6 @@ Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>,
 
 ## Clonando o projeto
 
-----
-
 1. Acesse a URL <a href="https://github.com/wlsf82/cypress-intermediario-v2" target="blank">https://github.com/wlsf82/cypress-intermediario-v2</a>
 2. Clique no botão Clone
 3. Escolha uma das opções (Clone with SSH ou Clone with HTTPS) e então clique no botão Copy URL ao lado do campo da opção escolhida
@@ -133,3 +131,90 @@ npx cypress open
 6. clique no botão Create spec;
 7. e então, confirme clicando no botão `Ok`, `run the spec`;
 8. Após a execução do arquivo recém-criado, feche o navegador Electron.
+
+## Configurando o projeto de testes automatizados
+
+1. Feche a Cypress App
+2. Abra o arquivo `cypress.config.js` criado na raiz do projeto e altere seu conteúdo pelo seguinte:
+
+```bash
+const { defineConfig } = require('cypress')
+
+module.exports = defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost',
+  },
+  fixturesFolder: false,
+  video: false,
+})
+```
+
+3. Ainda na raiz do projeto, crie um arquivo chamado `cypress.env.json` com os seguintes dados:
+
+```bash
+{
+    "user_name": "root",
+    "user_password": "password-do-usuario-root-definido-anteriormente",
+    "gitlab_access_token": "access-token-criado-anteriormente"
+}
+```
+
+4. Na pasta `cypress/`, crie uma sub-pasta chamada `downloads/`.
+
+# Testando a funcionalidade login
+
+1. No diretório `cypress/e2e/`, crie um novo diretório chamado `gui/` (graphical user interface)
+2. Então, mova o arquivo `login.cy.js` para o diretório recém criado e modifique seus dados para o seguinte:
+
+```bash
+describe('Login', () => {
+  it('successfully', () => {
+    cy.login()
+
+    cy.get('.qa-user-avatar').should('be.visible')
+  })
+})
+```
+
+3. Dentro do diretório `cypress/support/`, renomeie o arquivo `commands.js` por `gui_commands.js` e altere seu conteúdo pelo seguinte:
+
+```bash
+Cypress.Commands.add('login', (
+  user = Cypress.env('user_name'),
+  password = Cypress.env('user_password'),
+) => {
+  const login = () => {
+    cy.visit('/users/sign_in')
+
+    cy.get("[data-qa-selector='login_field']").type(user)
+    cy.get("[data-qa-selector='password_field']").type(password, { log: false })
+    cy.get("[data-qa-selector='sign_in_button']").click()
+  }
+
+  login()
+})
+```
+
+4. Dentro do diretório `cypress/support/`, altere os dados do arquivo e2e.js pelo seguinte:
+
+```bash
+import './gui_commands'
+```
+
+5. Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando para executar o novo teste em modo headless.
+
+```bash
+npx cypress run --spec cypress/e2e/gui/login.cy.js
+```
+
+```bash
+(Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  login.cy.js                              00:02        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:02        1        1        -        -        -
+
+```
