@@ -84,6 +84,18 @@ Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>,
 
 > Uma mensagem de que o _token_ foi criado com sucesso deve ser exibida, além do _token_ propriamente dito. **Copie o _token_**.
 
+## Adicionando uma chave SSH
+1. No terminal de linha de comando, digite o seguinte comando e pressione ENTER `ssh-keygen -t ed25519 -C "root@example.com"`
+2. Será solicitado um caminho para salvar a chave. Pressione `ENTER` para aceitar o caminho padrão
+3. Será solicitada uma senha. Pressione `ENTER` para que a senha não seja necessária
+4. Será solicitado que repita a senha. Pressione `ENTER` novamente para que a senha não seja necessária
+5. De novo no terminal de linha de comando, digite o seguinte comando e pressione `ENTER` para copiar a chave pública recém criada para a área de transferência `clip < ~/.ssh/id_ed25519.pub` (no caso de windows)
+6. Logado na aplicação com o usuário root, clique no avatar do usuário no canto superior direito da tela; clique no link Settings; e então, clique na opção SSH Keys (no menu lateral esquerdo)
+7. Cole sua chave SSH pública no campo key. O campo Title deve ser automaticamente preenchido
+8. Por fim, clique no botão `Add key`.
+
+----
+
 # Setup do projeto de testes com Cypress
 
 ## Clonando o projeto
