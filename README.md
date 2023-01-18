@@ -376,3 +376,51 @@ describe('Login', () => {
   })
 })
 ```
+
+3. Por fim, feche a Cypress App, abra-a de novo `npx cypress open` e execute os seguintes testes, nesta exata ordem: `createProject.cy.js`, (2x) e `logout.cy.js`.
+
+## Validando a sessão
+
+Se você executar novamente o teste `createProject.cy.js` após ter implementado o uso da funcionalidade `cy.session()`, perceberá que, se o teste de logout for executado antes, a sessão será perdida e teremos um erro.
+
+Isso ocorre, pois, o teste de logout inválida a sessão.
+
+1. Ainda via Cypress App, execute de novo o arquivo `createProject.cy.js`
+2. No arquivo `cypress/support/gui_commands.js`, altere o comando customizado de `login` pelo seguinte:
+
+```javascript
+Cypress.Commands.add('login', (
+  user = Cypress.env('user_name'),
+  password = Cypress.env('user_password'),
+  { cacheSession = true } = {},
+) => {
+  const login = () => {
+    cy.visit('/users/sign_in')
+
+    cy.get("[data-qa-selector='login_field']").type(user)
+    cy.get("[data-qa-selector='password_field']").type(password, { log: false })
+    cy.get("[data-qa-selector='sign_in_button']").click()
+  }
+
+  const validate = () => {
+    cy.visit('/')
+    cy.location('pathname', { timeout: 1000 })
+      .should('not.eq', '/users/sign_in')
+  }
+
+  const options = {
+    cacheAcrossSpecs: true,
+    validate,
+  }
+
+  if (cacheSession) {
+    cy.session(user, login, options)
+  } else {
+    login()
+  }
+})
+```
+
+3. Feche a **Cypress App**; abra-a de novo com o comando `npx cypress open`; escolha a opção **E2E Testing**; e inicialize o navegador **Electron**
+
+4. Por fim, via Cypress App, execute de novo todos os testes, quantas vezes quiser, e na ordem que quiser. Todos eles devem passar em todas execuções, porém, dependendo da ordem, um pode se beneficiar da sessão criada pelo teste anterior.
