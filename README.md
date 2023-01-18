@@ -89,7 +89,7 @@ Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>,
 2. Será solicitado um caminho para salvar a chave. Pressione `ENTER` para aceitar o caminho padrão
 3. Será solicitada uma senha. Pressione `ENTER` para que a senha não seja necessária
 4. Será solicitado que repita a senha. Pressione `ENTER` novamente para que a senha não seja necessária
-5. De novo no terminal de linha de comando, digite o seguinte comando e pressione `ENTER` para copiar a chave pública recém criada para a área de transferência `clip < ~/.ssh/id_ed25519.pub` (no caso de windows)
+5. De novo no terminal de linha de comando, digite o seguinte comando e pressione `ENTER` para copiar a chave pública recém-criada para a área de transferência `clip < ~/.ssh/id_ed25519.pub` (no caso de windows)
 6. Logado na aplicação com o usuário root, clique no avatar do usuário no canto superior direito da tela; clique no link Settings; e então, clique na opção SSH Keys (no menu lateral esquerdo)
 7. Cole sua chave SSH pública no campo key. O campo Title deve ser automaticamente preenchido
 8. Por fim, clique no botão `Add key`.
@@ -137,7 +137,7 @@ npx cypress open
 1. Feche a Cypress App
 2. Abra o arquivo `cypress.config.js` criado na raiz do projeto e altere seu conteúdo pelo seguinte:
 
-```bash
+```javascript
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
@@ -151,7 +151,7 @@ module.exports = defineConfig({
 
 3. Ainda na raiz do projeto, crie um arquivo chamado `cypress.env.json` com os seguintes dados:
 
-```bash
+```json
 {
     "user_name": "root",
     "user_password": "password-do-usuario-root-definido-anteriormente",
@@ -159,14 +159,14 @@ module.exports = defineConfig({
 }
 ```
 
-4. Na pasta `cypress/`, crie uma sub-pasta chamada `downloads/`.
+4. Na pasta `cypress/`, crie uma subpasta chamada `downloads/`.
 
 # Testando a funcionalidade login
 
-1. No diretório `cypress/e2e/`, crie um novo diretório chamado `gui/` (graphical user interface)
-2. Então, mova o arquivo `login.cy.js` para o diretório recém criado e modifique seus dados para o seguinte:
+1. No diretório `cypress/e2e/`, crie um diretório chamado `gui/` (graphical user interface)
+2. Então, mova o arquivo `login.cy.js` para o diretório recém-criado e modifique os seus dados para o seguinte:
 
-```bash
+```javascript
 describe('Login', () => {
   it('successfully', () => {
     cy.login()
@@ -178,7 +178,7 @@ describe('Login', () => {
 
 3. Dentro do diretório `cypress/support/`, renomeie o arquivo `commands.js` por `gui_commands.js` e altere seu conteúdo pelo seguinte:
 
-```bash
+```javascript
 Cypress.Commands.add('login', (
   user = Cypress.env('user_name'),
   password = Cypress.env('user_password'),
@@ -195,7 +195,7 @@ Cypress.Commands.add('login', (
 })
 ```
 
-4. Dentro do diretório `cypress/support/`, altere os dados do arquivo e2e.js pelo seguinte:
+4. No diretório `cypress/support/`, altere os dados do arquivo e2e.js pelo seguinte:
 
 ```bash
 import './gui_commands'
@@ -207,7 +207,7 @@ import './gui_commands'
 npx cypress run --spec cypress/e2e/gui/login.cy.js
 ```
 
-```bash
+```
 (Run Finished)
 
 
@@ -221,11 +221,11 @@ npx cypress run --spec cypress/e2e/gui/login.cy.js
 
 # Testando a funcionalidade de logout
 
-Crie um teste automatizado que exercita a funcionalidade de logout via interface gráfica de usuário.
+Criar um teste automatizado que exercita a funcionalidade de logout via interface gráfica de usuário.
 
 1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `logout.cy.js` com os seguintes dados:
 
-```bash
+```javascript
 describe('Logout', () => {
   beforeEach(() => {
     cy.login()
@@ -242,7 +242,7 @@ describe('Logout', () => {
 
 2. No diretório `cypress/support/`, atualize o arquivo `gui_commands.js` com o commando logout, conforme abaixo:
 
-```bash
+```javascript
 Cypress.Commands.add('logout', () => {
     cy.get('.qa-user-avatar').click()
     cy.contains('Sign out').click()
@@ -264,5 +264,64 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
   │ ✔  logout.cy.js                             00:03        1        1        -        -        - │
   └────────────────────────────────────────────────────────────────────────────────────────────────┘
     ✔  All specs passed!                        00:03        1        1        -        -        -
+```
+
+# Testando a funcionalidade de criação de projeto
+
+Criar um teste automatizado que exercita a funcionalidade de criação de projeto via interface gráfica de usuário.
+
+1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `createProject.cy.js` com os seguintes dados:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create Project', () => {
+  beforeEach(() => {
+    cy.login()
+  })
+
+  it('successfully', () => {
+    const project = {
+      name: `project-${faker.datatype.uuid()}`,
+      description: faker.random.words(5)
+    }
+
+    cy.gui_createProject(project)
+
+    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/${Cypress.env('user_name')}/${project.name}`)
+    cy.contains(project.name).should('be.visible')
+    cy.contains(project.description).should('be.visible')
+  })
+})
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo gui_commands.js com o commando `gui_createProject`, conforme abaixo:
+
+```javascript
+Cypress.Commands.add('gui_createProject', project => {
+  cy.visit('/projects/new')
+
+  cy.get('#project_name').type(project.name)
+  cy.get('#project_description').type(project.description)
+  cy.get('.qa-initialize-with-readme-checkbox').check()
+  cy.contains('Create project').click()
+})
+```
+
+3. Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando para executar o novo teste em modo headless.
+
+```bash
+npx cypress run --spec cypress/e2e/gui/createProject.cy.js
+```
+
+```
+(Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  createProject.cy.js                      00:06        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:06        1        1        -        -        -
 
 ```
