@@ -269,6 +269,8 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
 
 # Testando a funcionalidade de criação de projeto
 
+## Modo Intefarce Gráfica de Usuário
+
 Criar um teste automatizado que exercita a funcionalidade de criação de projeto via interface gráfica de usuário.
 
 1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `createProject.cy.js` com os seguintes dados:
@@ -325,4 +327,52 @@ npx cypress run --spec cypress/e2e/gui/createProject.cy.js
   └────────────────────────────────────────────────────────────────────────────────────────────────┘
     ✔  All specs passed!                        00:06        1        1        -        -        -
 
+```
+
+## Salvando a sessão do usuário
+
+Use a funcionalidade `cy.session()` para salvar a sessão do usuário no navegador, e assim, otimizar os testes, fazendo login via GUI somente para o teste que faz sentido.
+
+1. No arquivo `cypress/support/gui_commands.js`, altere o comando customizado de login pelo seguinte:
+
+```javascript
+Cypress.Commands.add('login', (
+  user = Cypress.env('user_name'),
+  password = Cypress.env('user_password'),
+  { cacheSession = true } = {},
+) => {
+  const login = () => {
+    cy.visit('/users/sign_in')
+
+    cy.get("[data-qa-selector='login_field']").type(user)
+    cy.get("[data-qa-selector='password_field']").type(password, { log: false })
+    cy.get("[data-qa-selector='sign_in_button']").click()
+  }
+
+  const options = {
+    cacheAcrossSpecs: true,
+  }
+
+  if (cacheSession) {
+    cy.session(user, login, options)
+  } else {
+    login()
+  }
+})
+```
+
+2. No arquivo `cypress/e2e/gui/login.cy.js`, altere seu conteúdo para o seguinte:
+
+```javascript
+describe('Login', () => {
+  it('successfully', () => {
+    const user = Cypress.env('user_name')
+    const password = Cypress.env('user_password')
+    const options = { cacheSession: false }
+
+    cy.login(user, password, options)
+
+    cy.get('.qa-user-avatar').should('be.visible')
+  })
+})
 ```
