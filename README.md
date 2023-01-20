@@ -581,3 +581,10 @@ describe('Create issue', () => {
 4. Nos arquivos `cypress/e2e/gui/createProject.cy.js` e `cypress/e2e/gui/createIssue.cy.js`, adicione também a chamada ao comando customizado `cy.api_deleteProjects()` antes da chamada do comando `cy.login()`, garantindo que testes de GUI também não estão a deixar "lixo" para trás
 
 5. Execute ambos os testes via Cypress App para garantir que ambos continuam funcionando.
+
+# Otimizando o de criação de issue via GUI
+
+Agora que podemos criar projetos via API, atualize o teste de criação de issue via GUI, para tal testar seja o mais otimizado possível, passando pela GUI só para o que for realmente necessário, sem a necessidade de **over testing**.
+
+1. altere o arquivo `cypress/e2e/gui/createIssue.cy.js`, para em vez de criar o projeto com o comando customizado `cy.gui_createProject(issue.project)`, use o comando `cy.api_createProject(issue.project)`
+2. Via Cypress App, execute o arquivo `cypress/e2e/gui/createIssue.cy.js`
