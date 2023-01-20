@@ -588,3 +588,37 @@ Agora que podemos criar projetos via API, atualize o teste de criação de issue
 
 1. altere o arquivo `cypress/e2e/gui/createIssue.cy.js`, para em vez de criar o projeto com o comando customizado `cy.gui_createProject(issue.project)`, use o comando `cy.api_createProject(issue.project)`
 2. Via Cypress App, execute o arquivo `cypress/e2e/gui/createIssue.cy.js`
+
+
+# Feedback visual dos testes de API
+
+1. Altere o arquivo `cypress/support/e2e.js` conforme abaixo:
+
+```javascript
+import 'cypress-plugin-api'
+
+import './api_commands'
+import './gui_commands'
+
+```
+
+2. Altere o arquivo `cypress.config.js` conforme abaixo:
+
+```javascript
+const { defineConfig } = require('cypress')
+
+module.exports = defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost',
+    env: {
+      hideCredentials: true,
+      requestMode: true,
+    },
+  },
+  fixturesFolder: false,
+  video: false,
+});
+```
+
+3. Via Cypress App, execute de novo o arquivo `cypress/e2e/api/createProject.cy.js`.
+
