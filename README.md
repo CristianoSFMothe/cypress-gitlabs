@@ -472,3 +472,66 @@ Cypress.Commands.add('gui_createIssue', issue => {
 ```
 
 3. Por fim, via Cypress App, execute o teste `createIssue.cy.js`.
+
+# Testando criação de projeto via API
+
+> testar o cenário de criação de projeto (via API) com sucesso.
+
+##  Criação de projeto via API
+
+1. Dentro do diretório `cypress/e2e/`, crie um novo diretório chamado `api/`
+
+2. Dentro do diretrório `cypress/e2e/api/`, crie um arquivo chamado `createProject.cy.js` com os seguintes dados:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create Project', () => {
+    it('successfully', () => {
+        const project = {
+            name: `project-${faker.datatype.uuid()}`,
+            description: faker.random.words(5)
+        }
+
+        cy.api_createProject(project)
+            .then(response => {
+                expect(response.status).to.equal(201)
+                expect(response.body.name).to.equal(project.name)
+                expect(response.body.description).to.equal(project.description)
+            })
+    })
+})
+
+```
+
+3. Dentro do diretório `cypress/support/`, crie um arquivo chamado `api_commands.js`, com os seguintes dados:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create Project', () => {
+    it('successfully', () => {
+        const project = {
+            name: `project-${faker.datatype.uuid()}`,
+            description: faker.random.words(5)
+        }
+
+        cy.api_createProject(project)
+            .then(response => {
+                expect(response.status).to.equal(201)
+                expect(response.body.name).to.equal(project.name)
+                expect(response.body.description).to.equal(project.description)
+            })
+    })
+})
+
+```
+
+4. Dentro do diretório `cypress/support/`, adicione ao arquivo e2e.js o import do arquivo `api_commands.js`, conforme abaixo:
+
+````javascript
+import './api_commands'
+import './gui_commands'
+````
+
+5. Por fim, via Cypress App, execute o teste `cypress/e2e/api/createProject.cy.js` via o comamdo `npx cypress open`.
