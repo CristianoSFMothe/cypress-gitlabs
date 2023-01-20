@@ -535,3 +535,49 @@ import './gui_commands'
 ````
 
 5. Por fim, via Cypress App, execute o teste `cypress/e2e/api/createProject.cy.js` via o comamdo `npx cypress open`.
+
+## Limpeza de dados
+
+Criar um mecanismo para a limpeza de projetos criados anteriomente, de forma que todos os testes que criem tal recurso possam iniciar em um estado "limpo".
+
+1. No arquivo `cypress/support/api_commands.js`, adicione os comandos `api_getAllProjects` e `api_deleteProjects`, conforme demonstrado abaixo:
+
+```javascript
+Cypress.Commands.add('api_getAllProjects', () => {
+  cy.request({
+    method: 'GET',
+    url: '/api/v4/projects/',
+    headers: { Authorization: accessToken },
+  });
+});
+
+Cypress.Commands.add('api_deleteProjects', () => {
+  cy.api_getAllProjects().then(res =>
+    res.body.forEach(project => cy.request({
+      method: 'DELETE',
+      url: `/api/v4/projects/${project.id}`,
+      headers: { Authorization: accessToken },
+    }))
+  );
+});
+```
+
+2. Agora, no arquivo `cypress/e2e/api/createProject.cy.js`, adicione a função **beforeEach**, chamando o comando customizado `cy.api_deleteProjects()` na sua função de callback, conforme abaixo:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create issue', () => {
+  beforeEach(() => cy.api_deleteProjects())
+
+  it('successfully', () => {
+    ...
+  })
+})
+```
+
+3. Via Cypress App, execute novamente o teste `cypress/e2e/api/createProject.cy.js` e verifique a limpeza dos projetos criados anteriormente acontecendo
+
+4. Nos arquivos `cypress/e2e/gui/createProject.cy.js` e `cypress/e2e/gui/createIssue.cy.js`, adicione também a chamada ao comando customizado `cy.api_deleteProjects()` antes da chamada do comando `cy.login()`, garantindo que testes de GUI também não estão a deixar "lixo" para trás
+
+5. Execute ambos os testes via Cypress App para garantir que ambos continuam funcionando.
