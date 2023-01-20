@@ -421,6 +421,54 @@ Cypress.Commands.add('login', (
 })
 ```
 
-3. Feche a **Cypress App**; abra-a de novo com o comando `npx cypress open`; escolha a opção **E2E Testing**; e inicialize o navegador **Electron**
+3. Feche a **Cypress App** abra-a de novo com o comando `npx cypress open`; escolha a opção **E2E Testing** e inicialize o navegador **Electron**
 
 4. Por fim, via Cypress App, execute de novo todos os testes, quantas vezes quiser, e na ordem que quiser. Todos eles devem passar em todas execuções, porém, dependendo da ordem, um pode se beneficiar da sessão criada pelo teste anterior.
+
+# Testando criação de issue
+
+Criar um teste automatizado que exercita a funcionalidade de criação de issue via interface gráfica de usuário.
+
+1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `createIssue.cy.js` com os seguintes dados:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create Issue', () => {
+  const issue = {
+    title: `issue-${faker.datatype.uuid()}`,
+    description: faker.random.words(3),
+    project: {
+      name: `project-${faker.datatype.uuid()}`,
+      description: faker.random.words(5)
+    }
+  }
+
+  beforeEach(() => {
+    cy.login()
+    cy.gui_createProject(issue.project)
+  })
+
+  it('successfully', () => {
+    cy.gui_createIssue(issue)
+
+    cy.get('.issue-details')
+      .should('contain', issue.title)
+      .and('contain', issue.description)
+  })
+})
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo `gui_commands.js` com o commando `gui_createIssue`, conforme abaixo:
+
+```javascript
+Cypress.Commands.add('gui_createIssue', issue => {
+  cy.visit(`/${Cypress.env('user_name')}/${issue.project.name}/issues/new`)
+
+  cy.get('.qa-issuable-form-title').type(issue.title)
+  cy.get('.qa-issuable-form-description').type(issue.description)
+  cy.contains('Submit issue').click()
+})
+```
+
+3. Por fim, via Cypress App, execute o teste `createIssue.cy.js`.

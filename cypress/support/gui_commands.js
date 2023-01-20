@@ -1,3 +1,4 @@
+// Login
 Cypress.Commands.add('login', (
     user = Cypress.env('user_name'),
     password = Cypress.env('user_password'),
@@ -29,16 +30,27 @@ Cypress.Commands.add('login', (
     }
 });
 
+// Logout
 Cypress.Commands.add('logout', () => {
-    cy.get('.qa-user-avatar').click()
-    cy.contains('Sign out').click()
+    cy.get('.qa-user-avatar').click();
+    cy.contains('Sign out').click();
 })
 
+// Create Project
 Cypress.Commands.add('gui_createProject', project => {
-    cy.visit('/projects/new')
+    cy.visit('/projects/new');
 
-    cy.get('#project_name').type(project.name)
-    cy.get('#project_description').type(project.description)
-    cy.get('.qa-initialize-with-readme-checkbox').check()
-    cy.contains('Create project').click()
+    cy.get('#project_name').type(project.name);
+    cy.get('#project_description').type(project.description);
+    cy.get('.qa-initialize-with-readme-checkbox').check();
+    cy.contains('Create project').click();
+});
+
+// Create Issue
+Cypress.Commands.add('gui_createIssue', issue => {
+    cy.visit(`/${Cypress.env('user_name')}/${issue.project.name}/issues/new`)
+
+    cy.get('.qa-issuable-form-title').type(issue.title)
+    cy.get('.qa-issuable-form-description').type(issue.description)
+    cy.contains('Submit issue').click()
 })
