@@ -708,3 +708,101 @@ Cypress.Commands.add('api_createIssue', issue => {
 3. Via Cypress App, execute o arquivo `cypress/e2e/api/createIssue.cy.js`.
 
 </details>
+
+---
+
+# Testando a adição de uma etiqueta (_label_) à uma issue
+
+<details><summary>Criação de label de forma otimizada</summary>
+</br>
+
+1. No diretório `cypress/e2e/gui/`, crie um arquivo chamado `setLabelOnIssue.cy.js` com o seguinte conteúdo:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+const options = { env: { snapshotOnly: true } }
+
+describe('Set label on issue', options, () => {
+  const issue = {
+    title: `issue-${faker.datatype.uuid()}`,
+    description: faker.random.words(3),
+    project: {
+      name: `project-${faker.datatype.uuid()}`,
+      description: faker.random.words(5)
+    }
+  }
+
+  const label = {
+    name: `label-${faker.random.word()}`,
+    color: '#ffaabb'
+  }
+
+  beforeEach(() => {
+    cy.api_deleteProjects()
+    cy.login()
+    cy.api_createIssue(issue)
+      .then(response => {
+        cy.api_createLabel(response.body.project_id, label)
+        cy.visit(`${Cypress.env('user_name')}/${issue.project.name}/issues/${response.body.iid}`)
+      })
+  })
+
+  it('successfully', () => {
+    cy.gui_setLabelOnIssue(label)
+
+    cy.get('.qa-labels-block').should('contain', label.name)
+    cy.get('.qa-labels-block span')
+      .should('have.attr', 'style', `background-color: ${label.color}; color: #333333;`)
+  })
+})
+
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo `api_commands.js` conforme abaixo:
+
+```javascript
+Cypress.Commands.add('api_createLabel', (projectId, label) => {
+  cy.request({
+    method: 'POST',
+    url: `/api/v4/projects/${projectId}/labels`,
+    body: {
+      name: label.name,
+      color: label.color
+    },
+    headers: { Authorization: accessToken },
+  })
+})
+```
+
+3. No diretório `cypress/support/`, atualize o arquivo `gui_commands.js` conforme abaixo:
+
+```javascript
+/// <reference types="Cypress" />
+
+Cypress.Commands.add('gui_setLabelOnIssue', label => {
+  cy.get('.qa-edit-link-labels').click()
+  cy.contains(label.name).click()
+  cy.get('body').click()
+})
+
+```
+
+4. Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando `npx cypress run --spec cypress/e2e/gui/setLabelOnIssue.cy.js` para executar o novo teste em modo _headless_.
+
+Ao final da execução, deve possuir um resultado como o seguinte:
+
+```
+(Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  setLabelOnIssue.cy.js                    00:05        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:05        1        1        -        -        -
+
+```
+
+</details>
+
