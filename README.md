@@ -56,7 +56,7 @@ O GitLab possui diversas funcionalidades, porém, duruante o curso fui tratado a
 
 # Setup do ambiente local com Docker
 
-Com o docker rodando no seu computador, execute o comando 
+Com o docker rodando no seu computador, execute o comando
 
 ```bash
 docker run --publish 80:80 --publish 22:22 --hostname localhost wlsf82/gitlab-ce
@@ -127,7 +127,7 @@ npx cypress open
 2. Aceite os arquivos de configuração clicando no botão Continue;
 3. Selecione o navegador `Electron` e clique no botão `Start E2E Testing in Electron`;
 4. Crie um primeiro arquivo de teste clicando na opção `Create new emtpy spec`;
-5. Nomeie o arquivo como `login.cy.js`; 
+5. Nomeie o arquivo como `login.cy.js`;
 6. clique no botão Create spec;
 7. e então, confirme clicando no botão `Ok`, `run the spec`;
 8. Após a execução do arquivo recém-criado, feche o navegador Electron.

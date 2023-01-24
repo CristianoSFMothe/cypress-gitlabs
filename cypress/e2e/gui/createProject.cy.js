@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-const options = { env: { snapshotOnly: true } }
+const options = {env: {snapshotOnly: true}}
 
 describe('Create Project', options, () => {
     beforeEach(() => {
