@@ -651,3 +651,60 @@ describe('Create Issue', options, () => {
 ```
 
 3. Via Cypress App, execute ambos os testes e utilize a funcionalidade de _time travel_ para voltar aos passos onde as requisições de API foram executadas para ter o feedback visual de tais chamadas com a ajuda da **lib cypress-plugin-api**. Além disso, tenha também as snapshots da aplicação em teste, quando executando comandos via GUI.
+
+# Testando criação de issue via API
+
+<details><summary>Testa a funcionalidade de criação de issue via API</summary>
+
+1. No do diretrório `cypress/e2e/api/`, crie um arquivo chamado `createIssue.cy.js` com os seguintes dados:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+describe('Create issue', () => {
+  beforeEach(() => cy.api_deleteProjects())
+
+  it('successfully', () => {
+    const issue = {
+      title: `issue-${faker.datatype.uuid()}`,
+      description: faker.random.words(3),
+      project: {
+        name: `project-${faker.datatype.uuid()}`,
+        description: faker.random.words(5)
+      }
+    }
+
+    cy.api_createIssue(issue)
+      .then(response => {
+        expect(response.status).to.equal(201)
+        expect(response.body.title).to.equal(issue.title)
+        expect(response.body.description).to.equal(issue.description)
+      })
+  })
+})
+
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo `api_commands.js` com o commando `api_createIssue`, conforme abaixo:
+
+```javascript
+Cypress.Commands.add('api_createIssue', issue => {
+  cy.api_createProject(issue.project)
+    .then(response => {
+      cy.request({
+        method: 'POST',
+        url: `/api/v4/projects/${response.body.id}/issues`,
+        body: {
+          title: issue.title,
+          description: issue.description
+        },
+        headers: { Authorization: accessToken },
+      })
+  })
+})
+
+```
+
+3. Via Cypress App, execute o arquivo `cypress/e2e/api/createIssue.cy.js`.
+
+</details>
