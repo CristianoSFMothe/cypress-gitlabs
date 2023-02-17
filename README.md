@@ -79,8 +79,10 @@ Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>,
 ## Criando um Access Token
 
 1. Faça login com o usuário `root` com a senha definida na seção anterior
-2. Clique no avatar do usuário no canto superior direito da tela; clique no link _Settings_, e então; clique na opção _Access Tokens_ (no menu lateral esquerdo)
-3. No campo nome, digite o valor `cypress-intermediario-v2`; na seção _Scopes_ marque a opção **api**; e então, clique no botão _Create personal access token_.
+2. Clique no avatar do usuário no canto superior direito da tela; clique no link _Settings_;
+3. Clique na opção _Access Tokens_ (no menu lateral esquerdo)
+3. No campo nome, digite o valor `cypress-intermediario-v2`; na seção _Scopes_ marque a opção **api**;
+4. Então, clique no botão _Create personal access token_.
 
 > Uma mensagem de que o _token_ foi criado com sucesso deve ser exibida, além do _token_ propriamente dito. **Copie o _token_**.
 
@@ -107,21 +109,24 @@ Ao acessar a URL <a href="http://localhost" target="blank">http://localhost</a>,
 ## Instalando o Cypress e outras libs
 
 ----
-No terminal de linha de comando, na raiz do projeto, execute o comando (este comando irá instalar o Cypress e outras libs como dependências de desenvolvimento, além de criar o arquivo` package-lock.json` e o diretório `node_modules/`, para onde é feito o download de todas as dependências).
+No terminal de linha de comando, na raiz do projeto, execute o comando
 
 ```bash
 npm i @faker-js/faker@7.6.0 cypress@12.0.2 cypress-plugin-api@2.6.1 -D
 ```
+> Este comando irá instalar o Cypress e outras libs como dependências de desenvolvimento, além de criar o arquivo` package-lock.json` e o diretório `node_modules/`, para onde é feito o download de todas as dependências
 
 ## Inicializando o Cypress
 
 ----
 
-No terminal de linha de comando, na raiz do projeto, execute o comando (este comando irá abrir a Cypress App, a qual vai guiar na criação do projeto de testes end-to-end (E2E).
+No terminal de linha de comando, na raiz do projeto, execute o comando
 
 ```bash
 npx cypress open
 ```
+
+> Este comando irá abrir a Cypress App, a qual vai guiar na criação do projeto de testes end-to-end (E2E).
 
 1. Clique no botão para a criação de um projeto de testes end-to-end (E2E Testing);
 2. Aceite os arquivos de configuração clicando no botão Continue;
@@ -135,7 +140,7 @@ npx cypress open
 ## Configurando o projeto de testes automatizados
 
 1. Feche a Cypress App
-2. Abra o arquivo `cypress.config.js` criado na raiz do projeto e altere seu conteúdo pelo seguinte:
+2. Abra o arquivo `cypress.config.js` criado na raiz do projeto e altere o seu conteúdo pelo seguinte:
 
 ```javascript
 const { defineConfig } = require('cypress')
@@ -474,11 +479,11 @@ Cypress.Commands.add('gui_createIssue', issue => {
 
 # Testando criação de projeto via API
 
-> testar o cenário de criação de projeto (via API) com sucesso.
+> Testar o cenário de criação de projeto (via API) com sucesso.
 
 ##  Criação de projeto via API
 
-1. Dentro do diretório `cypress/e2e/`, crie um novo diretório chamado `api/`
+1. No diretório `cypress/e2e/`, crie um diretório chamado `api/`
 
 2. Dentro do diretrório `cypress/e2e/api/`, crie um arquivo chamado `createProject.cy.js` com os seguintes dados:
 
@@ -503,7 +508,7 @@ describe('Create Project', () => {
 
 ```
 
-3. Dentro do diretório `cypress/support/`, crie um arquivo chamado `api_commands.js`, com os seguintes dados:
+3. No diretório `cypress/support/`, crie um arquivo chamado `api_commands.js`, com os seguintes dados:
 
 ```javascript
 import { faker } from '@faker-js/faker'
@@ -711,7 +716,7 @@ Cypress.Commands.add('api_createIssue', issue => {
 
 ---
 
-# Testando a adição de uma etiqueta (_label_) à uma issue
+# Testando a adição de uma etiqueta (_label_) a uma issue
 
 <details><summary>Criação de label de forma otimizada</summary>
 </br>
