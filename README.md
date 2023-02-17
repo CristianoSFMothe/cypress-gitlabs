@@ -293,6 +293,8 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
 
 Criar um teste automatizado que exercita a funcionalidade de criação de projeto via interface gráfica de usuário.
 
+<details><summary>GUI</summary>
+
 1. Dentro do diretrório `cypress/e2e/gui/`, crie um arquivo chamado `createProject.cy.js` com os seguintes dados:
 
 ```javascript
@@ -349,7 +351,11 @@ npx cypress run --spec cypress/e2e/gui/createProject.cy.js
 
 ```
 
+</details>
+
 ## Salvando a sessão do usuário
+
+<details><summary>Funcionalidade para salva a sessão do usuário</summary>
 
 Use a funcionalidade `cy.session()` para salvar a sessão do usuário no navegador, e assim, otimizar os testes, fazendo login via GUI somente para o teste que faz sentido.
 
@@ -399,7 +405,11 @@ describe('Login', () => {
 
 3. Por fim, feche a Cypress App, abra-a de novo `npx cypress open` e execute os seguintes testes, nesta exata ordem: `createProject.cy.js`, (2x) e `logout.cy.js`.
 
+<details><summary>
+
 ## Validando a sessão
+
+<details><summary>Funcionalidade para validar a sessão do usuário</summary>
 
 Se você executar novamente o teste `createProject.cy.js` após ter implementado o uso da funcionalidade `cy.session()`, perceberá que, se o teste de logout for executado antes, a sessão será perdida e teremos um erro.
 
@@ -445,7 +455,11 @@ Cypress.Commands.add('login', (
 
 4. Por fim, via Cypress App, execute de novo todos os testes, quantas vezes quiser, e na ordem que quiser. Todos eles devem passar em todas execuções, porém, dependendo da ordem, um pode se beneficiar da sessão criada pelo teste anterior.
 
-# Testando criação de issue
+</details>
+
+## Testando criação de issue
+
+<details><summary>Cenário para criarção de issue via GUI</summary>
 
 Criar um teste automatizado que exercita a funcionalidade de criação de issue via interface gráfica de usuário.
 
@@ -493,11 +507,17 @@ Cypress.Commands.add('gui_createIssue', issue => {
 
 3. Por fim, via Cypress App, execute o teste `createIssue.cy.js`.
 
+</details>
+
+---
+
 # Testando criação de projeto via API
 
 > Testar o cenário de criação de projeto (via API) com sucesso.
 
 ##  Criação de projeto via API
+
+<details><summary>Criando um projeto via API</summary>
 
 1. No diretório `cypress/e2e/`, crie um diretório chamado `api/`
 
@@ -556,7 +576,11 @@ import './gui_commands'
 
 5. Por fim, via Cypress App, execute o teste `cypress/e2e/api/createProject.cy.js` via o comamdo `npx cypress open`.
 
-### Limpeza de dados
+</details>
+
+## Limpeza de dados
+
+<details><summary>Funcionalidade para excluír projetos criados anteriormente</summary>
 
 Criar um mecanismo para a limpeza de projetos criados anteriomente, de forma que todos os testes que criem tal recurso possam iniciar em um estado "limpo".
 
@@ -602,15 +626,22 @@ describe('Create issue', () => {
 
 5. Execute ambos os testes via Cypress App para garantir que ambos continuam funcionando.
 
+</details>
+
 ## Otimizando o de criação de issue via GUI
+
+<details><summary>Funcionalidade para otimizar a criação de Issue via GUI</summary>
 
 Agora que podemos criar projetos via API, atualize o teste de criação de issue via GUI, para tal testar seja o mais otimizado possível, passando pela GUI só para o que for realmente necessário, sem a necessidade de **over testing**.
 
 1. altere o arquivo `cypress/e2e/gui/createIssue.cy.js`, para em vez de criar o projeto com o comando customizado `cy.gui_createProject(issue.project)`, use o comando `cy.api_createProject(issue.project)`
 2. Via Cypress App, execute o arquivo `cypress/e2e/gui/createIssue.cy.js`
 
+</details>
 
 ### Feedback visual dos testes de API
+
+<details><summary>Funcionalidade para melhorar a visualização de criação via API</summary>
 
 1. Altere o arquivo `cypress/support/e2e.js` conforme abaixo:
 
@@ -642,8 +673,11 @@ module.exports = defineConfig({
 
 3. Via Cypress App, execute de novo o arquivo `cypress/e2e/api/createProject.cy.js`.
 
+</details>
 
 ### Feedback visual dos testes de GUI com API
+
+<details><summary>Melhorando a visualização de teste via GUI com API</summary>
 
 funcionalidade (`snapshot only mode`), para que nos testes de _GUI_, também tenhamos _feedback_ visual quando chamadas de API estiverem rodando, ou quando estivermos utilizando a funcionalidade de [_time-traveling_](https://docs.cypress.io/guides/core-concepts/cypress-app#Time-traveling) do Cypress.
 
@@ -672,6 +706,10 @@ describe('Create Issue', options, () => {
 ```
 
 3. Via Cypress App, execute ambos os testes e utilize a funcionalidade de _time travel_ para voltar aos passos onde as requisições de API foram executadas para ter o feedback visual de tais chamadas com a ajuda da **lib cypress-plugin-api**. Além disso, tenha também as snapshots da aplicação em teste, quando executando comandos via GUI.
+
+< details>
+
+---
 
 # Testando criação de issue via API
 
