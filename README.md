@@ -710,7 +710,6 @@ describe('Create Issue', options, () => {
 < details>
 
 ---
-
 # Testando criação de issue via API
 
 <details><summary>Testa a funcionalidade de criação de issue via API</summary>
