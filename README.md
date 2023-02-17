@@ -286,7 +286,6 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
 </details>
 
 ---
-
 # Testando a funcionalidade de criação de projeto
 
 ## Modo Intefarce Gráfica de Usuário
