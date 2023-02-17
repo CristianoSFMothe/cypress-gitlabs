@@ -811,3 +811,100 @@ Ao final da execução, deve possuir um resultado como o seguinte:
 
 </details>
 
+---
+
+# Testando a adição de um marco (milestone) a uma issue
+<details><summary>Testar o cenário de adição de um marco a uma issue com sucesso.</summary>
+<br />
+
+### Informações úteis sobre a API
+
+* O endpoint para criação de milestones é `/api/v4/projects/:projectId/milestones`
+* O verbo para criação de milestones é o `POST`
+* O atributo que deve ser passado no `body` da requisição é o `title` (String)
+* Um token de autorizacão (`Authorization`) deve ser passado nos `headers`, prefixado por `Bearer`
+
+1. No diretório `cypress/e2e/gui/`, crie um arquivo chamado `setMilestoneOnIssue.cy.js` com o seguinte conteúdo:
+
+```javascript
+import { faker } from '@faker-js/faker'
+
+const options = { env: { snapshotOnly: true } }
+
+describe('Set milestone on issue', options, () => {
+  const issue = {
+    title: `issue-${faker.datatype.uuid()}`,
+    description: faker.random.words(3),
+    project: {
+      name: `project-${faker.datatype.uuid()}`,
+      description: faker.random.words(5)
+    }
+  }
+
+  const milestone = {
+    title: `milestone-${faker.random.word()}`
+  }
+
+  beforeEach(() => {
+    cy.api_deleteProjects()
+    cy.login()
+    cy.api_createIssue(issue)
+      .then(response => {
+        cy.api_createMilestone(response.body.project_id, milestone)
+        cy.visit(`${Cypress.env('user_name')}/${issue.project.name}/issues/${response.body.iid}`)
+      })
+  })
+
+  it('successfully', () => {
+    cy.gui_setMilestoneOnIssue(milestone)
+
+    cy.get('.block.milestone').should('contain', milestone.title)
+  })
+})
+
+```
+
+2. No diretório `cypress/support/`, atualize o arquivo `api_commands.js` conforme abaixo:
+
+```javascript
+Cypress.Commands.add('api_createMilestone', (projectId, milestone) => {
+  cy.request({
+    method: 'POST',
+    url: `/api/v4/projects/${projectId}/milestones`,
+    body: { title: milestone.title },
+    headers: { Authorization: accessToken },
+  })
+})
+```
+
+3. No diretório `cypress/support/`, atualize o arquivo `gui_commands.js` conforme abaixo:
+
+```javascript
+Cypress.Commands.add('gui_setMilestoneOnIssue', milestone => {
+  cy.get('.block.milestone .edit-link').click();
+  cy.contains(milestone.title).click();
+});
+```
+
+Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando
+
+```bash
+ npx cypress run --spec cypress/e2e/gui/setMilestoneOnIssue.cy.js
+```
+
+para executar o novo teste em modo headless.
+
+```
+(Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  setMilestoneOnIssue.cy.js                00:04        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:04        1        1        -        -        -
+
+```
+
+</details>
+
