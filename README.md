@@ -405,7 +405,7 @@ describe('Login', () => {
 
 3. Por fim, feche a Cypress App, abra-a de novo `npx cypress open` e execute os seguintes testes, nesta exata ordem: `createProject.cy.js`, (2x) e `logout.cy.js`.
 
-<details><summary>
+</details>
 
 ## Validando a sessão
 
