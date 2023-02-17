@@ -286,6 +286,7 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
 </details>
 
 ---
+
 # Testando a funcionalidade de criação de projeto
 
 ## Modo Intefarce Gráfica de Usuário
@@ -706,7 +707,7 @@ describe('Create Issue', options, () => {
 
 3. Via Cypress App, execute ambos os testes e utilize a funcionalidade de _time travel_ para voltar aos passos onde as requisições de API foram executadas para ter o feedback visual de tais chamadas com a ajuda da **lib cypress-plugin-api**. Além disso, tenha também as snapshots da aplicação em teste, quando executando comandos via GUI.
 
-< details>
+</details>
 
 ---
 # Testando criação de issue via API
