@@ -41,7 +41,6 @@ Além disso, garanta que os seguintes sistemas estejam instalados no seu computa
 
 > Para verificar as versões do Docker, git, Node.js e npm como o seguinte comando `docker --version && git --version && node --version && npm --version`
 
-
 # Funcionalidades da aplicação de testes
 
 O GitLab possui diversas funcionalidades, porém, duruante o curso fui tratado as seguintes:
@@ -137,7 +136,13 @@ npx cypress open
 7. e então, confirme clicando no botão `Ok`, `run the spec`;
 8. Após a execução do arquivo recém-criado, feche o navegador Electron.
 
-## Configurando o projeto de testes automatizados
+---
+
+# Testes automatizados
+
+## Configuração
+
+<details><summary>Configurações para relizar teste com o Cypress</summary>
 
 1. Feche a Cypress App
 2. Abra o arquivo `cypress.config.js` criado na raiz do projeto e altere o seu conteúdo pelo seguinte:
@@ -166,7 +171,11 @@ module.exports = defineConfig({
 
 4. Na pasta `cypress/`, crie uma subpasta chamada `downloads/`.
 
-# Testando a funcionalidade login
+</details>
+
+## Testando a funcionalidade login
+
+<details><summary>Teste no login</summary>
 
 1. No diretório `cypress/e2e/`, crie um diretório chamado `gui/` (graphical user interface)
 2. Então, mova o arquivo `login.cy.js` para o diretório recém-criado e modifique os seus dados para o seguinte:
@@ -223,8 +232,11 @@ npx cypress run --spec cypress/e2e/gui/login.cy.js
     ✔  All specs passed!                        00:02        1        1        -        -        -
 
 ```
+</details>
 
-# Testando a funcionalidade de logout
+## Testando a funcionalidade de logout
+
+<details><summary>Teste logout</summary>
 
 Criar um teste automatizado que exercita a funcionalidade de logout via interface gráfica de usuário.
 
@@ -270,6 +282,10 @@ npx cypress run --spec cypress/e2e/gui/logout.cy.js
   └────────────────────────────────────────────────────────────────────────────────────────────────┘
     ✔  All specs passed!                        00:03        1        1        -        -        -
 ```
+
+</details>
+
+---
 
 # Testando a funcionalidade de criação de projeto
 
