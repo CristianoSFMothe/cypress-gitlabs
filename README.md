@@ -1,11 +1,7 @@
 # cypress-intermediario
 
-
+```bash
 npx cypress run
+````
 
-
-
-       Spec                                              Tests  Passing  Failing  Pending  Skipped
-  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ ✔  login.cy.js                              00:06        1        1        -        -        - │
-  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+![image](https://github.com/CristianoSFMothe/cypress-intermediario/assets/68359459/b9a38b9c-c37d-406d-bdaf-843d5a10bc0c)
