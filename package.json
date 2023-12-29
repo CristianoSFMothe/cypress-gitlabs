@@ -1,4 +1,26 @@
 {
+  "name": "cypress-gitlabs",
+  "version": "1.0.0",
+  "description": "Repositório do projeto v2 do curso de testes automatizados com Cypress (intermdiário) da Escola TAT no Udemy",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CristianoSFMothe/cypress-gitlabs"
+  },
+  "keywords": [
+    "Cypress intermediário",
+    "JavaScript",
+    "Cypress"
+  ],
+  "author": "Cristiano Ferreira Mothe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CristianoSFMothe/cypress-gitlabs/issues"
+  },
+  "homepage": "https://github.com/CristianoSFMothe/cypress-gitlabs#readme",
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "cypress": "^12.0.2",
