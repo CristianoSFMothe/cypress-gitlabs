@@ -960,3 +960,59 @@ para executar o novo teste em modo headless.
 
 </details>
 
+# Executando comandos a nível de sistema
+
+<details><summary>Executando comandos no nível do sistema operacional</summary>
+</br>
+
+1. No diretório `cypress/e2e/`, crie um novo diretório chamado `cli/` (Command Line Interface)
+2. No diretório `cypress/e2e/cli/`, crie um arquivo chamado `gitClone.cy.js` com o seguinte conteúdo:
+
+```bash
+import { faker } from '@faker-js/faker'
+
+describe('git clone', () => {
+  const project = {
+    name: `project-${faker.datatype.uuid()}`,
+    description: faker.random.words(5)
+  }
+
+  beforeEach(() => {
+    cy.api_deleteProjects()
+    cy.api_createProject(project)
+  })
+
+  it('successfully', () => {
+    cy.cloneViaSSH(project)
+
+    cy.readFile(`cypress/downloads/${project.name}/README.md`)
+      .should('contain', `# ${project.name}`)
+      .and('contain', project.description)
+  })
+})
+```
+
+3. No diretório `cypress/support/`, crie um arquivo chamado `cli_commands.js` com o seguinte conteúdo:
+
+```bash
+Cypress.Commands.add('cloneViaSSH', project => {
+  const domain = Cypress.config('baseUrl').replace('http://', '')
+
+  cy.exec(`cd cypress/downloads/ && git clone git@${domain}:${Cypress.env('user_name')}/${project.name}.git`)
+})
+```
+
+4. Dentro do diretório `cypress/support/`, adicione ao arquivo `e2e.js` o import do arquivo `cli_commands.js`, conforme abaixo:
+
+```bash
+import 'cypress-plugin-api'
+
+import './api_commands'
+import './cli_commands'
+import './gui_commands'
+```
+5. Por fim, no terminal de linha de comando, na raiz do projeto, execute o comando `npx cypress run --spec cypress/e2e/cli/gitClone.cy.js` para executar o novo teste em modo headless.
+
+> Obs.: Na primeira execução, você será solicitada(o): `Are you sure you want to continue connecting (yes/no)?` Responda `yes` e pressione `ENTER`.
+
+> Obs.2: Caso o teste falhe com o erro abaixo, execute o seguinte comando: ssh-keygen -R localhost; pressione ENTER; e então, execute o teste novamente (`npx cypress run --spec cypress/e2e/cli/gitClone.cy.js`).
